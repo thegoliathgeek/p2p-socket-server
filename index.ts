@@ -27,7 +27,7 @@ ServerConfig.getExpress()
         : Number(process.env.PORT)
 
     connect(
-      process.env.MONGO_URL || 'mongodb://localhost:27017',
+      process.env.MONGO_URL || 'mongodb://localhost:27017/peer',
       { useNewUrlParser: true, useUnifiedTopology: true },
       () => {
         // eslint-disable-next-line no-console
