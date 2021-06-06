@@ -4,6 +4,7 @@ import http from 'http'
 import { ServerConfig } from './src/configs/server.config'
 import dotenv from 'dotenv'
 import { HandleSocketPath } from './src/handlers/socket-path.handler'
+import { connect } from 'mongoose'
 
 dotenv.config()
 
@@ -25,10 +26,18 @@ ServerConfig.getExpress()
         ? process.env.PORT
         : Number(process.env.PORT)
 
-    server.listen(port, () => {
-      // eslint-disable-next-line no-console
-      console.log(`Server started on port ${port}`)
-    })
+    connect(
+      process.env.MONGO_URL || 'mongodb://localhost:27017',
+      { useNewUrlParser: true, useUnifiedTopology: true },
+      () => {
+        // eslint-disable-next-line no-console
+        console.log(`Database connected to ${process.env.MONGO_URL}`)
+        server.listen(port, () => {
+          // eslint-disable-next-line no-console
+          console.log(`Server listening on port ${port}`)
+        })
+      }
+    )
   })
   .catch((err) => {
     throw new Error(err.message)
