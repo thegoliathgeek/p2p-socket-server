@@ -64,7 +64,7 @@ export class HandleSocketPath {
         participants: [...participants],
       })
 
-      socket.emit('participant-left', { id: socket.id })
+      IoServer.to(roomId).emit('participant-left', { id: socket.id })
     })
   }
 }
