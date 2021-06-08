@@ -17,7 +17,11 @@ export class RoomRouter {
     router.post('/create-room', async (req: Request, res: Response) => {
       const { maxParticipants } = req.body
       const roomId = v4()
-      const createdRoom = await createRoom({ maxParticipants, roomId })
+      const createdRoom = await createRoom({
+        maxParticipants,
+        roomId,
+        participants: [],
+      })
 
       res.json(createdRoom)
     })

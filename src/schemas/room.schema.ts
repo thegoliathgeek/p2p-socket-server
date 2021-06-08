@@ -6,7 +6,7 @@ export interface RoomSchemaInterface {
   roomId?: string
   sdpData?: any
   maxParticipants?: number
-  participants?: [string]
+  participants: string[]
   initiatorSocketID?: string
 }
 

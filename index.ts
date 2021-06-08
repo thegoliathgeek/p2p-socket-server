@@ -5,11 +5,12 @@ import { ServerConfig } from './src/configs/server.config'
 import dotenv from 'dotenv'
 import { HandleSocketPath } from './src/handlers/socket-path.handler'
 import { connect } from 'mongoose'
+import { RedisClient } from 'redis'
 
 dotenv.config()
 
 ServerConfig.getExpress()
-  .then((app: Express) => {
+  .then(({ app }: { app: Express; redis: RedisClient }) => {
     const server = http.createServer(app)
     const io = new Server(server, {
       cors: {

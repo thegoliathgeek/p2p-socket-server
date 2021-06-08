@@ -1,3 +1,4 @@
+import { Document } from 'mongoose'
 import { RoomModel, RoomSchemaInterface } from '../schemas/room.schema'
 
 export const createRoom = async (
@@ -21,6 +22,6 @@ export const updateRoomByRoomId = async (
 
 export const findRoomById = async (
   roomId: string
-): Promise<RoomSchemaInterface | null> => {
+): Promise<RoomSchemaInterface | any> => {
   return RoomModel.findOne({ roomId })
 }
