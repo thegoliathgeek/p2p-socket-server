@@ -4,4 +4,5 @@
 
 ```
 PORT='9000'
+MONGO_URL='mongodb://localhost:27017/peer'
 ```
