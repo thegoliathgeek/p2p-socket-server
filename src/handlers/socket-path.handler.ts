@@ -1,21 +1,28 @@
-import { tmpdir } from 'os'
+import { RedisClient } from 'redis'
 import { Server, Socket } from 'socket.io'
 import { findRoomById, updateRoomByRoomId } from '../helpers/room-mongo.helper'
 import { RoomSchemaInterface } from '../schemas/room.schema'
+import { promisify } from 'util'
 
 export class HandleSocketPath {
-  static handlePaths(IoServer: Server, socket: Socket): void {
+  static handlePaths(
+    IoServer: Server,
+    socket: Socket,
+    redis: RedisClient
+  ): void {
     socket.on('join-room', async ({ roomID }) => {
       const roomData: RoomSchemaInterface = await findRoomById(roomID)
+      const hmsetPromise = promisify(redis.hmset).bind(redis)
+      await hmsetPromise(['room', socket.id, roomID])
       let tempParticipants = roomData.participants
       tempParticipants = [...roomData.participants, socket.id]
       await updateRoomByRoomId(roomID, {
         participants: tempParticipants,
       })
+
       socket.join(roomID)
       socket.emit('joined-room', {
         roomID,
-        sdp: roomData?.sdpData,
         participants: tempParticipants,
       })
     })
@@ -37,6 +44,20 @@ export class HandleSocketPath {
         roomID,
         signal,
       })
+    })
+
+    socket.on('disconnect', async () => {
+      const hmgetPromise = promisify(redis.hget).bind(redis)
+      const roomId = await hmgetPromise('room', socket.id)
+      const roomData: RoomSchemaInterface = await findRoomById(roomId)
+      const participants = roomData.participants.filter(
+        (val) => val !== socket.id
+      )
+      await updateRoomByRoomId(roomId, {
+        participants: [...participants],
+      })
+
+      socket.emit('participant-left', { id: socket.id })
     })
   }
 }

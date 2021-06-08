@@ -10,7 +10,7 @@ import { RedisClient } from 'redis'
 dotenv.config()
 
 ServerConfig.getExpress()
-  .then(({ app }: { app: Express; redis: RedisClient }) => {
+  .then(({ app, redis }: { app: Express; redis: RedisClient }) => {
     const server = http.createServer(app)
     const io = new Server(server, {
       cors: {
@@ -19,7 +19,7 @@ ServerConfig.getExpress()
     })
 
     io.on('connection', (socket) => {
-      HandleSocketPath.handlePaths(io, socket)
+      HandleSocketPath.handlePaths(io, socket, redis)
     })
 
     const port =
