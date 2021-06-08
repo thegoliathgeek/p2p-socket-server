@@ -13,9 +13,13 @@ export class HandleSocketPath {
     socket.on('join-room', async ({ roomID }) => {
       const roomData: RoomSchemaInterface = await findRoomById(roomID)
       const hmsetPromise = promisify(redis.hmset).bind(redis)
+
       await hmsetPromise(['room', socket.id, roomID])
+
       let tempParticipants = roomData.participants
+
       tempParticipants = [...roomData.participants, socket.id]
+
       await updateRoomByRoomId(roomID, {
         participants: tempParticipants,
       })
@@ -27,7 +31,7 @@ export class HandleSocketPath {
       })
     })
 
-    socket.on('send-offer', async ({ roomID, signal, toUser, offeredUser }) => {
+    socket.on('send-offer', async ({ roomID, signal, toUser }) => {
       const roomData: RoomSchemaInterface = await findRoomById(roomID)
       if (roomID && roomData.participants.length > 1) {
         await updateRoomByRoomId(roomID, {
@@ -35,7 +39,10 @@ export class HandleSocketPath {
           initiatorSocketID: socket.id,
           participants: roomData.participants,
         })
-        IoServer.to(toUser).emit('fetch-offer', { signal, offeredUser })
+        IoServer.to(toUser).emit('fetch-offer', {
+          signal,
+          offeredUser: socket.id,
+        })
       }
     })
 
