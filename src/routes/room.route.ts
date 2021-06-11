@@ -9,7 +9,6 @@ export class RoomRouter {
     const router = Router()
 
     router.get('/', (req: Request | any, res) => {
-      console.log(req.sessionID)
       res.json({
         error: false,
         message: 'Room Route up and running',
