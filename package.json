@@ -17,11 +17,11 @@
     "axios": "^0.21.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.2",
     "mongoose": "^5.12.13",
     "redis": "^3.1.2",
     "socket.io": "^4.1.2",
     "socket.io-client": "^4.1.2",
-    "trim-newlines": "^4.0.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -32,6 +32,7 @@
     "@commitlint/config-conventional": "^12.1.4",
     "@types/axios": "^0.14.0",
     "@types/express": "^4.17.12",
+    "@types/express-session": "^1.17.3",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.12.1",
     "@types/redis": "^2.8.29",
