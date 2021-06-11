@@ -1,11 +1,20 @@
 import axios from 'axios'
 const api = axios.create({ baseURL: 'http://localhost:9000' })
-const createRoom = jest.fn(() => api.post('room/create-room'))
+const createRoom = jest.fn((body = {}) =>
+  api.post('room/create-room', { ...body })
+)
 
 describe('Room Api Testing', () => {
-  test('Create Update', async () => {
+  test('Create Room', async () => {
     const response = await createRoom()
     expect(typeof response?.data?.roomId).toBe('string')
+  })
+
+  test('Create Room with Max Participants', async () => {
+    const response = await createRoom({
+      maxParticipants: 4,
+    })
+    expect(response?.data?.maxParticipants).toBe(4)
   })
 
   test('Update Room', async () => {
